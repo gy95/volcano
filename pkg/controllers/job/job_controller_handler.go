@@ -145,6 +145,11 @@ func (cc *jobcontroller) addPod(obj interface{}) {
 		return
 	}
 
+	if pod.DeletionTimestamp != nil {
+		cc.deletePod(pod)
+		return
+	}
+
 	jobName, found := pod.Annotations[batch.JobNameKey]
 	if !found {
 		klog.Infof("Failed to find jobName of Pod <%s/%s>, skipping",
@@ -163,11 +168,6 @@ func (cc *jobcontroller) addPod(obj interface{}) {
 	if err != nil {
 		klog.Infof("Failed to convert jobVersion of Pod <%s/%s> into number, skipping",
 			pod.Namespace, pod.Name)
-		return
-	}
-
-	if pod.DeletionTimestamp != nil {
-		cc.deletePod(pod)
 		return
 	}
 

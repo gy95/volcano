@@ -725,14 +725,8 @@ func calcPodStatus(pod *v1.Pod, taskStatusCount map[string]batch.TaskState) {
 	}
 
 	switch pod.Status.Phase {
-	case v1.PodPending:
-		taskStatusCount[taskName].Phase[v1.PodPending]++
-	case v1.PodRunning:
-		taskStatusCount[taskName].Phase[v1.PodRunning]++
-	case v1.PodSucceeded:
-		taskStatusCount[taskName].Phase[v1.PodSucceeded]++
-	case v1.PodFailed:
-		taskStatusCount[taskName].Phase[v1.PodFailed]++
+	case v1.PodPending, v1.PodRunning, v1.PodSucceeded, v1.PodFailed:
+		taskStatusCount[taskName].Phase[pod.Status.Phase]++
 	default:
 		taskStatusCount[taskName].Phase[v1.PodUnknown]++
 	}
